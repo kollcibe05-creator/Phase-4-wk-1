@@ -20,7 +20,9 @@ class Hero(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     super_name = db.Column(db.String)
-
+    hero_powers = db.relationship("HeroPower", back_populates="hero", cascades="all, delete-orphan")
+    def __repr__(self):
+        return f"<Hero {self.id}, {self.name}, {self.super_name}>"
 class Power(db.Model, SerializerMixin):
     __tablename__ = "powers"
 
@@ -29,6 +31,11 @@ class Power(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     description = db.Column(db.String)
+
+    hero_powers = db.relationship("HeroPower", back_populates="power", cascades="all, delete-orphan")
+
+    def __repr__(self):
+        return f"<Power {self.id}, {self.name}, {self.description}>"
 
 class HeroPower(db.model, SerializerMixin):
     __tablename__ == "hero_powers"
@@ -39,7 +46,14 @@ class HeroPower(db.model, SerializerMixin):
     strength = db.Column(db.String)
     hero_id = db.Column(db.Integer, db.ForeinKey("heroes.id"))
     power_id = db.Column(db.Integer, db.ForeinKey("powers.id"))
+
+
+    power = db.relationship('Power', back_populates="hero_powers")
     
+    hero = db.relationship("Hero", back_populates="hero_powers")
+
+    def __repr__(self):
+        return f"<HeroPower {self.id}, {self.strength}, {self.hero_id}, {self.power_id}>" 
 
 
 
