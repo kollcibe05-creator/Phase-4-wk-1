@@ -16,7 +16,7 @@ db = SQLAlchemy(metadata=metadata)
 class Hero(db.Model, SerializerMixin):
     __tablename__ = "heroes"
 
-    serialize_rules = ()
+    serialize_rules = ("-hero_powers.hero",)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
@@ -30,7 +30,7 @@ class Hero(db.Model, SerializerMixin):
 class Power(db.Model, SerializerMixin):
     __tablename__ = "powers"
 
-    serialize_rules = ()
+    serialize_rules = ("-hero_powers.power",)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
@@ -46,7 +46,7 @@ class Power(db.Model, SerializerMixin):
 class HeroPower(db.model, SerializerMixin):
     __tablename__ == "hero_powers"
 
-    serialize_rules = ()
+    serialize_rules = ("-hero.hero_powers","-power.hero_powers",)
 
     id = db.Column(db.Integer, primary_key=True)
     strength = db.Column(db.String)
