@@ -24,7 +24,13 @@ def index():
 
 @app.route("/heroes")
 def heroes():
-    heroes = [hero.to_dict() for hero in Hero.query.all()]  #formatting
+    heroes = []  
+    for hero in Hero.query.all()
+        response_body = {
+            "id": hero.id,
+            "name": hero.name,
+            "super_name": hero.super_name
+        }
     response = make_response(jsonify(heroes), 200)
     return response
 
