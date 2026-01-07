@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemyimport CheckConstraint
 
 metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
@@ -34,7 +35,11 @@ class Power(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
-    description = db.Column(db.String)
+    description = db.Column(db.String(>=20))
+
+    __table_args__ = (
+        db.CheckConstraint("length(description) >= 20", name = "minimum_length")
+    ) 
 
     hero_powers = db.relationship("HeroPower", back_populates="power", cascade="all, delete-orphan")
     heroes = association_proxy(
@@ -52,7 +57,9 @@ class HeroPower(db.Model, SerializerMixin):
     strength = db.Column(db.String)
     hero_id = db.Column(db.Integer, db.ForeignKey("heroes.id"))
     power_id = db.Column(db.Integer, db.ForeignKey("powers.id"))
-
+    __table_args__ = (
+        db.CheckConstraint("strength IN ('Strong', 'Weak', 'Average')", name = "valid_level_of_strength")
+    ) 
 
     power = db.relationship('Power', back_populates="hero_powers")
     
