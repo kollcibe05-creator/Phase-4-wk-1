@@ -21,7 +21,7 @@ class Hero(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     super_name = db.Column(db.String)
-    hero_powers = db.relationship("HeroPower", back_populates="hero", cascades="all, delete-orphan")
+    hero_powers = db.relationship("HeroPower", back_populates="hero", cascade="all, delete-orphan")
     powers = association_proxy(
         "hero_powers", "power", creator=lambda power_obj: HeroPower(power=power_obj)
     )
@@ -36,22 +36,22 @@ class Power(db.Model, SerializerMixin):
     name = db.Column(db.String)
     description = db.Column(db.String)
 
-    hero_powers = db.relationship("HeroPower", back_populates="power", cascades="all, delete-orphan")
+    hero_powers = db.relationship("HeroPower", back_populates="power", cascade="all, delete-orphan")
     heroes = association_proxy(
-        "hero_powers", "hero", creator=lambda hero_obj: HeroPower(hero_obj)
+        "hero_powers", "hero", creator=lambda hero_obj: HeroPower(hero=hero_obj)
     )
     def __repr__(self):
         return f"<Power {self.id}, {self.name}, {self.description}>"
 
-class HeroPower(db.model, SerializerMixin):
-    __tablename__ == "hero_powers"
+class HeroPower(db.Model, SerializerMixin):
+    __tablename__ = "hero_powers"
 
     serialize_rules = ("-hero.hero_powers","-power.hero_powers",)
 
     id = db.Column(db.Integer, primary_key=True)
     strength = db.Column(db.String)
-    hero_id = db.Column(db.Integer, db.ForeinKey("heroes.id"))
-    power_id = db.Column(db.Integer, db.ForeinKey("powers.id"))
+    hero_id = db.Column(db.Integer, db.ForeignKey("heroes.id"))
+    power_id = db.Column(db.Integer, db.ForeignKey("powers.id"))
 
 
     power = db.relationship('Power', back_populates="hero_powers")
