@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy_serializer import SerializerMixin
+from sqlalchemy.ext.associationproxy import association_proxy
 
 metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
@@ -21,6 +22,9 @@ class Hero(db.Model, SerializerMixin):
     name = db.Column(db.String)
     super_name = db.Column(db.String)
     hero_powers = db.relationship("HeroPower", back_populates="hero", cascades="all, delete-orphan")
+    powers = association_proxy(
+        "hero_powers", "power", creator=lambda power_obj: HeroPower(power=power_obj)
+    )
     def __repr__(self):
         return f"<Hero {self.id}, {self.name}, {self.super_name}>"
 class Power(db.Model, SerializerMixin):
@@ -33,7 +37,9 @@ class Power(db.Model, SerializerMixin):
     description = db.Column(db.String)
 
     hero_powers = db.relationship("HeroPower", back_populates="power", cascades="all, delete-orphan")
-
+    heroes = association_proxy(
+        "hero_powers", "hero", creator=lambda hero_obj: HeroPower(hero_obj)
+    )
     def __repr__(self):
         return f"<Power {self.id}, {self.name}, {self.description}>"
 
