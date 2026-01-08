@@ -59,7 +59,7 @@ def powers():
         response_body = {
             "description": power.description,
             "id": power.id,
-            "name": power.id
+            "name": power.name
         }
         powers.append(response_body)
     response = make_response(jsonify(powers), 200)
