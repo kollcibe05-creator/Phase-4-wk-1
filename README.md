@@ -2,6 +2,7 @@
 
 ##### A data model of its kind!!!
 
+##Description
 Superheroes is Flask-SQLAlchemy + SQL  backend project aimed at resolving the complexity of organizing superheroes' data with consistency and persisting the changes to the Database. It implements flask-sqlalchemy, SQL and OOP to model the database and ensure accuracy while accessing the data
 
 The ideological business requirements are:
@@ -10,7 +11,9 @@ The ideological business requirements are:
 2. A Power has many `Hero`s through `HeroPower`.
 3. A `HeroPower` belongs to a `Hero` and belongs to a  `Power`
 _______
-
+The ERD model of the relationships;
+https://curriculum-content.s3.amazonaws.com/6130/code-challenge-2/domain.png
+_______
 The models incorporate serialize_rules and association_proxies to limit recursion depth and simplify cross-model data access.
 ## Tech Stack
 - Python
@@ -54,7 +57,7 @@ pipenv shell
 
 ---
 
-## Environment Configurations
+## Environment Configurations Setup
 To start working with the data  you need to:
 1. Navigate to */server* dir:
 ```
@@ -85,47 +88,32 @@ python seed.py
 
 ## Functionality
 # models.py
-It contains the model `Department` which has the following functionalitites.
+Our models import from `db.Model` and `SerializerMixin`.
+The have similar constructors such as:
 1. *__repr__*: In it is the modified output of a class instance to improve clarity.
-2. *__tablename__*: Species the table in the database that the objects will be mapped to.
-   Below it are the constraints that restricts some field inputs to be of certain data types and length.
-3. *get_all()*: A class method that returns all the departments mapped into the departments table.
-4. *find_by_id()*: A class method that returns a department instance in the database of the id given.
-5. *find_by_name()*: A class method that returns a department instance in the database of the name given.
-6. *create()*: A class method that creates a new department instance and persists it to the database using sessions.
-5. *update()*: A class method that updates the department instance and persists it to the database using sessions.
-8. *delete()*: A class method that deletes a department instance and from the database using sessions.
+2. *__tablename__*: Specifies the table in the database that the objects will be mapped to.
+3. *serialize_rules*: It states the fields to be excluded to prevent recursion depth.
+4. *association_proxy*: It simplifies access to the cross-model fields and data. 
+
+The models are:
+- Power
+- HeroPower ~ The association object.
+- Hero
 
 
 # app.py
-It contains the model `Employee` which has the functionalities:
-1. *__repr__*: In it is the modified output of a class instance to improve clarity.
-2. *__tablename__*: Species the table in the database that the objects will be mapped to.
-    Below it are the constraints that restricts some field inputs to be of certain data types and length.
-    Fields such as *received_reviews*, *given_reviews* and *department* have been used to create the relationship with the departments and reviews Models and tables. 
-3. *get_all()*: A class method that returns all the employees mapped into the departments table.
-4. *find_by_id()*: A class method that returns an employee instance in the database of the id given.
-5. *find_by_full_name()*: A class method that returns an employee instance in the database of the names given.
-6. *create()*: A class method that creates a new employee instance and persists it to the database using sessions.
-5. *update()*: A class method that updates the employee instance details and persists it to the database using sessions.
-8. *delete()*: A class method that deletes an employee instance and from the database using sessions.
+The views registered to the routes as depicted are:
+1. (GET)*heroes()*: GET request to */heroes*.
+2. (GET)*get_heroes(id)*: Takes id as an argument and implements GET to the */heroes/:id*.
+3. (GET)*powers()*: GET request to */powers*.
+4. (GET, PATCH)*get_powers(id)*: Takes id as an argument and implements GET and PATCH to the */powers/:id*.
+5. (GET, POST)*post_hp()*: POST to */hero_powers*. 
 
 # seed.py
-It contains the model `Review` which has the functionalitites:
-1. *__repr__*: In it is the modified output of a class instance to improve clarity.
-2. *__tablename__*: Species the table in the database that the objects will be mapped to.
-    Below it are the constraints that restricts some field inputs to be of certain data types and length.
-    Fields *reviewee* and *reviewer*  have been used to create  relationship with the employee Model and table in the database. 
-3. *get_all()*: A class method that returns all the reviews mapped into the departments table.
-4. *find_by_id()*: A class method that returns a review instance in the database of the id given.
-5. *create()*: A class method that creates a new review instance and persists it to the database using sessions.
-6. *update()*: A class method that updates the review instance details and persists it to the database using sessions.
-7. *delete()*: A class method that deletes a review instance and from the database using sessions.
-<!-- 5. *find_by_name()*: A class method that returns a review instance in the database of the names given. -->
+It contains the data seeded to the `app.db`
 
 # app.db
-It maps the Seeded data  to the database.
-`recreate_db` drops all the tables and recreates it with the new seeded data.
+It holds our SQL database.
 
 
 
