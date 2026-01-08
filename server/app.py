@@ -1,4 +1,4 @@
-from flask import Flask, make_response, request, jsonify, request
+from flask import Flask, make_response, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -74,7 +74,7 @@ def get_powers(id):
             response_body = {
             "description": power.description,
             "id": power.id,
-            "name": power.id
+            "name": power.name
         }
             response = make_response(jsonify(response_body), 200)
             return response
@@ -86,7 +86,10 @@ def get_powers(id):
             return response
     elif request.method == "PATCH":
         if power:
-            setattr(power, "description", request.form.get("description"))
+            # instead of request.form.get()
+            data = request.get_json()   
+            for attr in data:
+                setattr(power, attr, data.get(attr))
             db.session.add(power)
             db.session.commit()
             power_dict = {
@@ -95,7 +98,7 @@ def get_powers(id):
                 "name": power.name
             }       
 
-            response = make_response(jsonify(power_dict), 200)
+            response = make_response(jsonify(power_dict), 200) #, {"Content-Type": "application/json"}
             return response
         elif not power:
             response_body = {
@@ -112,24 +115,21 @@ def get_powers(id):
 
 @app.route("/hero_powers", methods=["GET", "POST"])
 def post_hp():
-    new_hp = HeroPower(
-        strength = request.form.get("strength"),
-        power_id = request.form.get("power_id"),
-        hero_id = request.form.get("hero_id"),
-    )
+    if request.method == "POST":
+        data = request.get_json()
+        try:
+            new_hp = HeroPower(
+                strength = data.get("strength"),
+                power_id = data.get("power_id"),
+                hero_id = data.get("hero_id"),
+            )
 
-    db.session.add(new_hp)
-    db.session.commit()
-    if new_hp:
-        new_dict = new_hp.to_dict()
-        response = make_response(jsonify(new_dict), 201)
-        return response
-    else:
-        response_body = {
-        "errors": ["validation errors"]
-        }
-        response = make_response(jsonify(response_body), 404)
-
+            db.session.add(new_hp)
+            db.session.commit()
+            return make_response(jsonify(new_hp.hero.to_dict()), 201, {"Content-Type": "application/json"})
+        except Exception as e:
+            print(e)
+            return make_response(jsonify({"errors": ["validation errors"]}), 400)
 
 
 
