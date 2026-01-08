@@ -7,7 +7,7 @@ Superheroes is Flask-SQLAlchemy + SQL  backend project aimed at resolving the co
 
 The ideological business requirements are:
 
-1. A Hero has many  `Power`s through the  `Department`.
+1. A Hero has many  `Power`s through the  `HeroPower`.
 2. A Power has many `Hero`s through `HeroPower`.
 3. A `HeroPower` belongs to a `Hero` and belongs to a  `Power`
 _______
