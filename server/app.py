@@ -25,12 +25,13 @@ def index():
 @app.route("/heroes")
 def heroes():
     heroes = []  
-    for hero in Hero.query.all()
+    for hero in Hero.query.all():
         response_body = {
             "id": hero.id,
             "name": hero.name,
             "super_name": hero.super_name
         }
+        heroes.append(response_body)
     response = make_response(jsonify(heroes), 200)
     return response
 
@@ -40,7 +41,7 @@ def get_heroes(id):
 
     if hero:
         hero_dict = hero.to_dict()
-        response = make_response(jsonify(hero_dict), 200)  #format
+        response = make_response(jsonify(hero_dict), 200)
         return response
     else:
         response_body = {
@@ -53,7 +54,14 @@ def get_heroes(id):
 
 @app.route("/powers")
 def powers():
-    powers = [power.to_dict() for power in Power.query.all()]  #formatting
+    powers  = []
+    for power in Power.query.all():
+        response_body = {
+            "description": power.description,
+            "id": power.id,
+            "name": power.id
+        }
+        powers.append(response_body)
     response = make_response(jsonify(powers), 200)
     return response
 
@@ -63,8 +71,12 @@ def get_powers(id):
     power = Power.query.filter(Power.id == id).first()
     if request.method == "GET":
         if power:
-            power_dict = power.to_dict()
-            response = make_response(jsonify(power_dict), 200)  #format
+            response_body = {
+            "description": power.description,
+            "id": power.id,
+            "name": power.id
+        }
+            response = make_response(jsonify(response_body), 200)
             return response
         else:
             response_body = {
@@ -77,7 +89,11 @@ def get_powers(id):
             setattr(power, "description", request.form.get("description"))
             db.session.add(power)
             db.session.commit()
-            power_dict = power.to_dict()#formatting         
+            power_dict = {
+                "description": power.description,
+                "id": power.id,
+                "name": power.name
+            }       
 
             response = make_response(jsonify(power_dict), 200)
             return response
@@ -94,12 +110,12 @@ def get_powers(id):
             response = make_response(jsonify(response_body), 404)
             return response
 
-@app.hero_powers("/hero_powers", methods=["GET", "POST"])
+@app.route("/hero_powers", methods=["GET", "POST"])
 def post_hp():
     new_hp = HeroPower(
-        strength=request.form.get("strength")
-        power_id=request.form.get("power_id")
-        hero_id=request.form.get("hero_id")
+        strength = request.form.get("strength"),
+        power_id = request.form.get("power_id"),
+        hero_id = request.form.get("hero_id"),
     )
 
     db.session.add(new_hp)
