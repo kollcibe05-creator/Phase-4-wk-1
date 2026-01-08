@@ -2,7 +2,7 @@
 
 ##### A data model of its kind!!!
 
-##Description
+## Description
 Superheroes is Flask-SQLAlchemy + SQL  backend project aimed at resolving the complexity of organizing superheroes' data with consistency and persisting the changes to the Database. It implements flask-sqlalchemy, SQL and OOP to model the database and ensure accuracy while accessing the data
 
 The ideological business requirements are:
@@ -55,22 +55,20 @@ pipenv install
 pipenv shell
 ```
 
----
 
 ## Environment Configurations Setup
 To start working with the data  you need to:
 1. Navigate to */server* dir:
 ```
-
-    cd server
+cd server
 
 ```
 2. Configure the flask environment commands:
-    ```
+```
     export FLASK_APP=app.py
     export FLASK_RUN_PORT=5555
 
-    ```
+```
 This will allow you to start the server using :
 ```
 flask run
@@ -84,7 +82,16 @@ flask db upgrade head
 python seed.py
 
 ```
+To run the app and benefit from the debugger, use:
+```shell
+python app.py
 
+```
+Running it requires that you are in the */server* dir;
+```bash
+    cd server
+
+```
 
 ## Functionality
 # models.py
