@@ -12,7 +12,7 @@ The ideological business requirements are:
 3. A `HeroPower` belongs to a `Hero` and belongs to a  `Power`
 _______
 The ERD model of the relationships;
-https://curriculum-content.s3.amazonaws.com/6130/code-challenge-2/domain.png
+![alt text](/domain.png)
 _______
 The models incorporate serialize_rules and association_proxies to limit recursion depth and simplify cross-model data access.
 ## Tech Stack
